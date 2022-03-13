@@ -1,12 +1,11 @@
 // Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
 using System.Reflection;
-using osu.Framework.Bindables;
 using osu.Framework.Input;
 using osu.Framework.Platform;
 using Vignette.Game;
-using Vignette.Game.Configuration;
 
 namespace Vignette.Desktop
 {

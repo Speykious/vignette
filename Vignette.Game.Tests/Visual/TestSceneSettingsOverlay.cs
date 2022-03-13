@@ -1,12 +1,11 @@
 // Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
 using NUnit.Framework;
 using osu.Framework.Allocation;
-using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using Vignette.Game.Settings;
-using Vignette.Game.Settings.Components;
 using Vignette.Game.Settings.Panels;
 using Vignette.Game.Settings.Sections;
 

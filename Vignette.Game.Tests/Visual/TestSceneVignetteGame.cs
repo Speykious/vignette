@@ -1,9 +1,10 @@
 // Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
+using System.ComponentModel;
 using osu.Framework.Allocation;
 using osu.Framework.Platform;
-using System.ComponentModel;
 
 namespace Vignette.Game.Tests.Visual
 {

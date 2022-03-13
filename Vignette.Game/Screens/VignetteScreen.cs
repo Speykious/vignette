@@ -5,6 +5,7 @@
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Framework.Screens;
 using Vignette.Game.Input;
 using Vignette.Game.Settings;
@@ -45,8 +46,18 @@ namespace Vignette.Game.Screens
             }
         }
 
+        public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void OnReleased(GlobalAction action)
         {
+        }
+
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
