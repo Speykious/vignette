@@ -19,7 +19,7 @@
     <EmbeddedResource Include="Resources\**\*" />
   </ItemGroup>
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <StartupObject>Vignette.Game.Tests.Program</StartupObject>
   </PropertyGroup>
