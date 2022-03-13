@@ -1,5 +1,6 @@
 // Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,10 @@ using osu.Framework.Input.Bindings;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using Vignette.Game.Configuration;
+using Vignette.Game.Graphics.Themeing;
 using Vignette.Game.Input;
 using Vignette.Game.IO;
 using Vignette.Game.Resources;
-using Vignette.Game.Graphics.Themeing;
-using Vignette.Camera.Platform;
-using Vignette.Camera;
 using Vignette.Game.Tracking;
 using Vignette.Live2D.Resources;
 

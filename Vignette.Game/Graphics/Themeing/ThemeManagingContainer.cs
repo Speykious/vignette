@@ -1,5 +1,6 @@
 // Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
 using System.IO;
 using System.Linq;
@@ -7,7 +8,6 @@ using Newtonsoft.Json;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Platform;
-using osu.Framework.Threading;
 using Vignette.Game.Configuration;
 using Vignette.Game.IO;
 

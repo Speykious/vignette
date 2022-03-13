@@ -1,5 +1,6 @@
 // Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
 using System.Drawing;
 using osu.Framework.Allocation;
@@ -8,7 +9,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
-using Vignette.Camera.Platform;
 using Vignette.Game.Configuration;
 
 namespace Vignette.Game

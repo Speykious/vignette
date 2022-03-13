@@ -1,19 +1,14 @@
 // Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Akihabara.Framework;
-using Akihabara.Framework.Packet;
-using Akihabara.Framework.Port;
-using Akihabara.Framework.Protobuf;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using SixLabors.ImageSharp.PixelFormats;
-using UnmanageUtility;
-using Vignette.Camera;
 using Vignette.Game.IO;
 using static Vignette.Game.Graphics.Utils;
 using ImageFormat = Akihabara.Framework.ImageFormat.ImageFormat;

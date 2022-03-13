@@ -1,10 +1,11 @@
 // Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
+using System.Linq;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Screens;
-using System.Linq;
 
 namespace Vignette.Game.Graphics.UserInterface
 {

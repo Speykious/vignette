@@ -1,10 +1,12 @@
-﻿// Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// Copyright (c) The Vignette Authors
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.IO.Stores;
 
@@ -36,5 +38,10 @@ namespace Vignette.Game.IO
         public IEnumerable<string> GetAvailableResources() => store.GetAvailableResources();
 
         public void Dispose() => store.Dispose();
+
+        public Task<string> GetAsync(string name, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

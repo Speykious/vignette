@@ -1,11 +1,11 @@
 // Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
 using System;
 using System.Linq;
 using osu.Framework.Allocation;
 using Vignette.Game.Settings;
-using Vignette.Game.Settings.Sections;
 using Vignette.Game.Tracking;
 using Vignette.Live2D.Graphics;
 using Vignette.Live2D.Graphics.Controllers;

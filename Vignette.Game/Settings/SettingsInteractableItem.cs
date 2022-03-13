@@ -1,11 +1,12 @@
 // Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
-using osu.Framework.Graphics;
 using System;
+using osu.Framework.Graphics;
 using Vignette.Game.Graphics.Shapes;
-using Vignette.Game.Graphics.UserInterface;
 using Vignette.Game.Graphics.Themeing;
+using Vignette.Game.Graphics.UserInterface;
 
 namespace Vignette.Game.Settings
 {

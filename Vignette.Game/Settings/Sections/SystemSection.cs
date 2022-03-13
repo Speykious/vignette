@@ -1,9 +1,10 @@
 // Copyright (c) The Vignette Authors
-// Licensed under GPL-3.0 (With SDK Exception). See LICENSE for details.
+// This file is part of Vignette.
+// Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
 using System;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -13,10 +14,10 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using Vignette.Game.Configuration;
+using Vignette.Game.Graphics.Themeing;
 using Vignette.Game.Graphics.Typesets;
 using Vignette.Game.Graphics.UserInterface;
 using Vignette.Game.Settings.Components;
-using Vignette.Game.Graphics.Themeing;
 using Vignette.Game.Settings.Panels;
 
 namespace Vignette.Game.Settings.Sections
