@@ -9,6 +9,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
+using SeeShark.Device;
 using Vignette.Game.Configuration;
 
 namespace Vignette.Game
@@ -26,10 +27,10 @@ namespace Vignette.Game
         private Bindable<bool> isMuted;
         private readonly BindableDouble muteAdjustment = new BindableDouble();
 
-        private Bindable<string> cameraDevice;
+        private Bindable<int> cameraIndex;
 
         [BackgroundDependencyLoader]
-        private void load(VignetteConfigManager gameConfig, FrameworkConfigManager frameworkConfig, AudioManager audio, CameraManager camera, GameHost host)
+        private void load(VignetteConfigManager gameConfig, FrameworkConfigManager frameworkConfig, AudioManager audio, CameraManager cameraManager, Bindable<Camera> camera, GameHost host)
         {
             // We cannot disable the bindable obtained from framework config as it is internally modified.
             windowSize = frameworkConfig.GetBindable<Size>(FrameworkSetting.WindowedSize);
@@ -70,8 +71,8 @@ namespace Vignette.Game
                     audio.RemoveAdjustment(AdjustableProperty.Volume, muteAdjustment);
             }, true);
 
-            cameraDevice = gameConfig.GetBindable<string>(VignetteSetting.CameraDevice);
-            camera.Current.BindTo(cameraDevice);
+            cameraIndex = gameConfig.GetBindable<int>(VignetteSetting.CameraIndex);
+            camera.Value = cameraManager.GetDevice(cameraIndex.Value);
         }
     }
 }

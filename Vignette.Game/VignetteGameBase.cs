@@ -18,6 +18,7 @@ using osu.Framework.Input;
 using osu.Framework.Input.Bindings;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
+using SeeShark.Device;
 using Vignette.Game.Configuration;
 using Vignette.Game.Graphics.Themeing;
 using Vignette.Game.Input;
@@ -51,7 +52,6 @@ namespace Vignette.Game
         }
 
         protected Storage Storage;
-        protected CameraManager CameraManager;
         protected VignetteConfigManager LocalConfig;
         protected SessionConfigManager SessionConfig;
 
@@ -63,7 +63,7 @@ namespace Vignette.Game
         private DependencyContainer dependencies;
         private IBindable<bool> resizable;
         private IBindable<bool> showFps;
-        private Bindable<CameraDevice> cameraDevice;
+        private Bindable<Camera> camera;
         private Container content;
         private TrackingComponent tracker;
 
@@ -107,23 +107,11 @@ namespace Vignette.Game
             dependencies.CacheAs(SessionConfig = new SessionConfigManager());
             dependencies.CacheAs(tracker = new TrackingComponent());
 
-            dependencies.CacheAs(CameraManager = CameraManager.CreateSuitableManager(Scheduler));
-            dependencies.CacheAs<IBindable<CameraDevice>>(cameraDevice = new Bindable<CameraDevice>());
+            using (CameraManager cameraManager = new CameraManager())
+                dependencies.CacheAs(camera = new Bindable<Camera>());
 
             showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
-
-            CameraManager.Current.BindValueChanged(e =>
-            {
-                if (string.IsNullOrEmpty(e.NewValue))
-                    return;
-
-                cameraDevice.Value?.Dispose();
-
-                int id = CameraManager.CameraDeviceNames.ToList().IndexOf(e.NewValue);
-                cameraDevice.Value = new CameraDevice(id, EncodingFormat.JPEG);
-                cameraDevice.Value.Start();
-            }, true);
 
             resizable = LocalConfig.GetBindable<bool>(VignetteSetting.WindowResizable);
 
@@ -168,6 +156,7 @@ namespace Vignette.Game
         }
 
         // Override framework level keybind actions as we're controlling bindables responsible to it
+        /*
         bool IKeyBindingHandler<FrameworkAction>.OnPressed(FrameworkAction action)
         {
             switch (action)
@@ -179,12 +168,12 @@ namespace Vignette.Game
                     return OnPressed(action);
             }
         }
+        */
 
         protected override void Dispose(bool isDisposing)
         {
             LocalConfig?.Dispose();
             keybindConfig?.Dispose();
-            CameraManager?.Dispose();
             base.Dispose(isDisposing);
         }
 

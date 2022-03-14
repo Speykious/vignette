@@ -3,6 +3,7 @@
 // Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
 using System;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -12,6 +13,9 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Localisation;
 using osuTK;
+using SeeShark;
+using SeeShark.Decode;
+using SeeShark.Device;
 using SixLabors.ImageSharp.PixelFormats;
 using Vignette.Game.Configuration;
 using Vignette.Game.Graphics.Containers;
@@ -31,7 +35,7 @@ namespace Vignette.Game.Settings.Sections
         public event Action CalibrateAction;
 
         [Resolved]
-        private CameraManager camera { get; set; }
+        private CameraManager cameraManager { get; set; }
 
         private readonly BindableList<string> devices = new BindableList<string>();
 
@@ -51,7 +55,7 @@ namespace Vignette.Game.Settings.Sections
                             Icon = SegoeFluent.Camera,
                             Label = "Device",
                             ItemSource = devices,
-                            Current = config.GetBindable<string>(VignetteSetting.CameraDevice),
+                            Current = config.GetBindable<string>(VignetteSetting.CameraIndex),
                         },
                     }
                 },
@@ -80,21 +84,21 @@ namespace Vignette.Game.Settings.Sections
                 },
             };
 
-            devices.AddRange(camera.CameraDeviceNames);
-            camera.OnNewDevice += onNewCameraDevice;
-            camera.OnLostDevice += onLostCameraDevice;
+            devices.AddRange(cameraManager.Devices.ToArray().Select((info) => info.ToString()));
+            cameraManager.OnNewDevice += onNewCameraDevice;
+            cameraManager.OnLostDevice += onLostCameraDevice;
         }
 
-        private void onNewCameraDevice(string name)
+        private void onNewCameraDevice(CameraInfo info)
         {
-            if (!devices.Contains(name))
-                devices.Add(name);
+            if (!devices.Contains(info.ToString()))
+                devices.Add(info.ToString());
         }
 
-        private void onLostCameraDevice(string name)
+        private void onLostCameraDevice(CameraInfo info)
         {
-            if (devices.Contains(name))
-                devices.Remove(name);
+            if (devices.Contains(info.ToString()))
+                devices.Remove(info.ToString());
         }
 
         private class CameraTrackingPreview : Container
@@ -106,7 +110,7 @@ namespace Vignette.Game.Settings.Sections
             private Texture texture;
 
             [BackgroundDependencyLoader]
-            private void load(IBindable<CameraDevice> camera)
+            private void load(Bindable<Camera> camera)
             {
                 Size = new Vector2(250, 140);
                 Masking = true;
@@ -130,7 +134,7 @@ namespace Vignette.Game.Settings.Sections
                 camera.BindValueChanged(handleCamera, true);
             }
 
-            private void handleCamera(ValueChangedEvent<CameraDevice> e)
+            private void handleCamera(ValueChangedEvent<Camera> e)
             {
                 Schedule(() => preview.Hide());
 
@@ -138,20 +142,22 @@ namespace Vignette.Game.Settings.Sections
                 texture = null;
 
                 if (e.OldValue != null)
-                    e.OldValue.OnTick -= handleCameraTick;
+                    e.OldValue.OnFrame -= onFrameEventHandler;
+
 
                 if (e.NewValue != null)
-                    e.NewValue.OnTick += handleCameraTick;
+                    e.NewValue.OnFrame += onFrameEventHandler;
             }
 
-            private void handleCameraTick()
+            private void onFrameEventHandler(object sender, SeeShark.FrameEventArgs e)
             {
-                if (tracker?.OutputFrame == null)
+                if (e.Status != DecodeStatus.NewFrame)
                     return;
 
-                var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(tracker.OutputFrame, tracker.OutputFrameWidth, tracker.OutputFrameHeight);
+                Frame frame = e.Frame;
+                var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(frame.RawData, frame.Width, frame.Height);
 
-                texture ??= new Texture(tracker.OutputFrameWidth, tracker.OutputFrameHeight);
+                texture ??= new Texture(frame.Width, frame.Height);
                 texture.SetData(new TextureUpload(pixelData));
 
                 preview.Texture = texture;

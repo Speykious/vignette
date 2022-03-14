@@ -28,7 +28,7 @@ namespace Vignette.Game.Configuration
             SetDefault(VignetteSetting.WindowResizable, false);
             SetDefault(VignetteSetting.WindowSize, new Size(1366, 768));
             SetDefault(VignetteSetting.ShowFpsOverlay, false);
-            SetDefault(VignetteSetting.CameraDevice, string.Empty);
+            SetDefault(VignetteSetting.CameraIndex, 0);
             SetDefault(VignetteSetting.BackgroundPosition, Vector2.Zero);
             SetDefault(VignetteSetting.BackgroundRotation, 0.0f, 0.0f, 360.0f, 1.0f);
             SetDefault(VignetteSetting.BackgroundScale, 1.0f, 0.1f, 10.0f, 0.1f);
@@ -77,7 +77,7 @@ namespace Vignette.Game.Configuration
         WindowResizable,
         WindowSize,
         ShowFpsOverlay,
-        CameraDevice,
+        CameraIndex,
         CameraSaturation,
         CameraContrast,
         CameraGain,

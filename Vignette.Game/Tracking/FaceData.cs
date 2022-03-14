@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using Mediapipe.Net.Framework.Protobuf;
 
 namespace Vignette.Game.Tracking
 {
