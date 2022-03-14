@@ -30,7 +30,7 @@ jobs:
       matrix:
         os:
           - { runner: windows-latest, runtime: win-x64 }
-          - { runner: ubuntu-latest, runtime: ubuntu.20.04-x64 }
+          - { runner: ubuntu-latest, runtime: linux-x64 }
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -61,14 +61,14 @@ jobs:
      runs-on: ubuntu-latest
      strategy:
         matrix:
-           runtime: ['win-x64', 'ubuntu.20.04-x64']
+           runtime: ['win-x64', 'linux-x64']
      steps:
        - name: Download Artifact
          uses: actions/download-artifact@v2
          with:
             name: ${{ needs.variables.outputs.version }}-${{ matrix.runtime }}
             path: ${{ github.workspace }}
-            
+
        - name: Upload Build
          uses: ncipollo/release-action@v1
          if: ${{ github.event.action == 'released' }}
@@ -76,7 +76,7 @@ jobs:
            artifacts: "Vignette.${{ needs.variables.outputs.version }}-${{ matrix.runtime }}.zip"
            allowUpdates: true
            tag: ${{ github.event.release.tag_name }}
-           
+
 
        - name: Upload Build (Insider)
          if: ${{ github.event.action == 'prereleased' }}
@@ -107,7 +107,7 @@ jobs:
         uses: Ilshidur/action-discord@master
         with:
           args: |
-           Heads up @everyone! `${{ needs.variables.outputs.version }}` is now available! 
+           Heads up @everyone! `${{ needs.variables.outputs.version }}` is now available!
            https://github.com/vignetteapp/vignette/releases/tag/${{ github.event.release.tag_name }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_REL }}

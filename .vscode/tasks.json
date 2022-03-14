@@ -13,7 +13,7 @@
                 "-m",
                 "-verbosity:m",
                 "-r",
-                "ubuntu.20.04-x64",
+                "linux-x64",
                 "Vignette.Desktop"
             ],
             "group": "build",
@@ -33,7 +33,7 @@
                 "-m",
                 "-verbosity:m",
                 "-r",
-                "ubuntu.20.04-x64",
+                "linux-x64",
                 "Vignette.Desktop"
             ],
             "group": "build",
@@ -52,7 +52,7 @@
                 "-m",
                 "-verbosity:m",
                 "-r",
-                "ubuntu.20.04-x64",
+                "linux-x64",
                 "Vignette.Game.Tests"
             ],
             "group": "build",
@@ -72,7 +72,7 @@
                 "-m",
                 "-verbosity:m",
                 "-r",
-                "ubuntu.20.04-x64",
+                "linux-x64",
                 "Vignette.Game.Tests"
             ],
             "group": "build",
