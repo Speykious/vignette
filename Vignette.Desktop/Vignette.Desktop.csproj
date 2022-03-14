@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Mediapipe.Net.Runtime.CPU" Version="0.8.9">
+    <PackageReference Include="Mediapipe.Net.Runtime.GPU" Version="0.8.9">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
     <PackageReference Include="Vignette.Live2D.Native" Version="4.0.0-r3" />

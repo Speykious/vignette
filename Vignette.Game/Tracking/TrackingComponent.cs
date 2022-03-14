@@ -44,14 +44,15 @@ namespace Vignette.Game.Tracking
         private FrameConverter converter;
         private readonly List<FaceData> faces = new List<FaceData>();
 
-        private FaceMeshCpuCalculator calculator;
+        private FaceMeshGpuCalculator calculator;
 
         private long timestampCounter = 0;
 
         [BackgroundDependencyLoader]
         private void load(Bindable<Camera> camera)
         {
-            calculator = new FaceMeshCpuCalculator();
+#pragma warning disable CA1416
+            calculator = new FaceMeshGpuCalculator();
             calculator.OnResult += handleLandmarks;
             calculator.Run();
 

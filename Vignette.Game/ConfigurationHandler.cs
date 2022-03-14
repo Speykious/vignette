@@ -2,6 +2,7 @@
 // This file is part of Vignette.
 // Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
+using System;
 using System.Drawing;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
@@ -72,8 +73,21 @@ namespace Vignette.Game
             }, true);
 
             cameraIndex = gameConfig.GetBindable<int>(VignetteSetting.CameraIndex);
-            camera.Value = cameraManager.GetDevice(cameraIndex.Value);
-            camera.Value.StartCapture();
+            try
+            {
+                camera.Value = cameraManager.GetDevice("/dev/video1", new SeeShark.VideoInputOptions
+                {
+                    InputFormat = "mjpeg",
+                    VideoSize = (640, 480),
+                });
+                camera.Value.StartCapture();
+            }
+            catch (System.Exception ex)
+            {
+                camera.Value?.StopCapture();
+                // camera.Value = null;
+                Console.Error.WriteLine($"Error: couldn't open camera at index {1}\n{ex}");
+            }
         }
     }
 }

@@ -186,6 +186,8 @@ namespace Vignette.Game
         {
             LocalConfig?.Dispose();
             keybindConfig?.Dispose();
+            camera?.Value?.StopCapture();
+            camera?.Value?.Dispose();
             cameraManager?.Dispose();
             base.Dispose(isDisposing);
         }

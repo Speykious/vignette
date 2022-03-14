@@ -46,18 +46,12 @@ namespace Vignette.Game.Screens
             }
         }
 
-        public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
-        {
-            throw new System.NotImplementedException();
-        }
+        public bool OnPressed(KeyBindingPressEvent<GlobalAction> e) => OnPressed(e.Action);
 
         public void OnReleased(GlobalAction action)
         {
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
-        {
-            throw new System.NotImplementedException();
-        }
+        public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) => OnReleased(e.Action);
     }
 }
