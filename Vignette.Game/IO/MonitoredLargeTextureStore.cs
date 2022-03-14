@@ -3,6 +3,7 @@
 // Vignette is licensed under the GPL v3 License (With SDK Exception). See LICENSE for details.
 
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Platform;
@@ -22,7 +23,7 @@ namespace Vignette.Game.IO
         public new Texture Get(string name)
             => largeTextureStore.Get(name);
 
-        public new Task<Texture> GetAsync(string name)
+        public new Task<TextureUpload> GetAsync(string name, CancellationToken cancellationToken = default)
             => largeTextureStore.GetAsync(name);
     }
 }

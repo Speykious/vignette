@@ -25,7 +25,7 @@ namespace Vignette.Game.Settings.Components
 
         public OpenExternalLinkButton(Storage storage)
         {
-            Action = () => storage.OpenInNativeExplorer();
+            Action = () => storage.PresentExternally();
         }
 
         public OpenExternalLinkButton(string link)

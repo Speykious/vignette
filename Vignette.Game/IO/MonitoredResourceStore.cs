@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
@@ -27,8 +28,8 @@ namespace Vignette.Game.IO
         public byte[] Get(string name)
             => UnderlyingStore.Get(name);
 
-        public Task<byte[]> GetAsync(string name)
-            => UnderlyingStore.GetAsync(name);
+        public Task<byte[]> GetAsync(string name, CancellationToken cancellationToken = default)
+            => UnderlyingStore.GetAsync(name, cancellationToken);
 
         // UnderlyingStore would always yield no results from the root directory.
         // Might be a bug on the framework's end since it only checks for subdirectories.

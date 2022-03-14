@@ -152,7 +152,7 @@ namespace Vignette.Game.Settings.Panels
                 stream.SetLength(0);
                 writer.Write(JsonConvert.SerializeObject(theme.Value, Formatting.Indented));
 
-                manager.Store.OpenInNativeExplorer();
+                manager.Store.PresentExternally();
             }
         }
     }
