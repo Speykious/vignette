@@ -11,7 +11,7 @@ namespace Vignette.Game.Graphics.Containers
     public class ThemableTextFlowContainer : TextFlowContainer
     {
         public ThemableTextFlowContainer(Action<CheapThemableSpriteText> creationParameters)
-            : base((Action<osu.Framework.Graphics.Sprites.SpriteText>)creationParameters)
+            : base((s) => creationParameters((CheapThemableSpriteText)s))
         {
         }
 

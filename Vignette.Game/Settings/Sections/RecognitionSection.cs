@@ -34,14 +34,17 @@ namespace Vignette.Game.Settings.Sections
 
         public event Action CalibrateAction;
 
-        [Resolved]
-        private CameraManager cameraManager { get; set; }
-
         private readonly BindableList<string> devices = new BindableList<string>();
+        private Bindable<string> currentDevice;
 
         [BackgroundDependencyLoader]
-        private void load(VignetteConfigManager config)
+        private void load(VignetteConfigManager config, CameraManager cameraManager)
         {
+            devices.AddRange(cameraManager.Devices.ToArray().Select((info) => info.ToString()));
+            currentDevice = new Bindable<string>(devices[config.GetBindable<int>(VignetteSetting.CameraIndex).Value]);
+            cameraManager.OnNewDevice += onNewCameraDevice;
+            cameraManager.OnLostDevice += onLostCameraDevice;
+
             Children = new Drawable[]
             {
                 new SettingsSubSection
@@ -55,7 +58,7 @@ namespace Vignette.Game.Settings.Sections
                             Icon = SegoeFluent.Camera,
                             Label = "Device",
                             ItemSource = devices,
-                            Current = config.GetBindable<string>(VignetteSetting.CameraIndex),
+                            Current = currentDevice,
                         },
                     }
                 },
@@ -83,10 +86,6 @@ namespace Vignette.Game.Settings.Sections
                     },
                 },
             };
-
-            devices.AddRange(cameraManager.Devices.ToArray().Select((info) => info.ToString()));
-            cameraManager.OnNewDevice += onNewCameraDevice;
-            cameraManager.OnLostDevice += onLostCameraDevice;
         }
 
         private void onNewCameraDevice(CameraInfo info)

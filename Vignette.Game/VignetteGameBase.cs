@@ -19,6 +19,7 @@ using osu.Framework.Input.Bindings;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using SeeShark.Device;
+using SeeShark.FFmpeg;
 using Vignette.Game.Configuration;
 using Vignette.Game.Graphics.Themeing;
 using Vignette.Game.Input;
@@ -26,6 +27,7 @@ using Vignette.Game.IO;
 using Vignette.Game.Resources;
 using Vignette.Game.Tracking;
 using Vignette.Live2D.Resources;
+using static SeeShark.FFmpeg.FFmpegManager;
 
 namespace Vignette.Game
 {
@@ -63,6 +65,8 @@ namespace Vignette.Game
         private DependencyContainer dependencies;
         private IBindable<bool> resizable;
         private IBindable<bool> showFps;
+
+        private CameraManager cameraManager;
         private Bindable<Camera> camera;
         private Container content;
         private TrackingComponent tracker;
@@ -77,6 +81,14 @@ namespace Vignette.Game
         [BackgroundDependencyLoader]
         private void load()
         {
+            SetupFFmpeg(
+                FFmpegLogLevel.Info,
+                ConsoleColor.Yellow,
+                AppDomain.CurrentDomain.BaseDirectory,
+                "/usr/lib",
+                "/usr/lib64"
+            );
+
             Resources.AddStore(new DllResourceStore(VignetteResources.ResourceAssembly));
             Resources.AddStore(new NamespacedResourceStore<byte[]>(new DllResourceStore(CubismResources.ResourceAssembly), "Resources"));
 
@@ -107,8 +119,8 @@ namespace Vignette.Game
             dependencies.CacheAs(SessionConfig = new SessionConfigManager());
             dependencies.CacheAs(tracker = new TrackingComponent());
 
-            using (CameraManager cameraManager = new CameraManager())
-                dependencies.CacheAs(camera = new Bindable<Camera>());
+            dependencies.CacheAs(cameraManager = new CameraManager());
+            dependencies.CacheAs(camera = new Bindable<Camera>());
 
             showFps = LocalConfig.GetBindable<bool>(VignetteSetting.ShowFpsOverlay);
             showFps.BindValueChanged(e => FrameStatistics.Value = e.NewValue ? FrameStatisticsMode.Minimal : FrameStatisticsMode.None, true);
@@ -174,6 +186,7 @@ namespace Vignette.Game
         {
             LocalConfig?.Dispose();
             keybindConfig?.Dispose();
+            cameraManager?.Dispose();
             base.Dispose(isDisposing);
         }
 
