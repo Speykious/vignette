@@ -20,13 +20,8 @@ namespace Vignette.Game.Tracking
 {
     public class TrackingComponent : Component
     {
-        public byte[] OutputFrame { get; private set; }
-
-        public int OutputFrameWidth { get; private set; }
-
-        public int OutputFrameHeight { get; private set; }
-
-        public int OutputFrameWidthStep { get; private set; }
+        public IBindable<ImageFrame> CurrentFrame => currentFrame;
+        private Bindable<ImageFrame> currentFrame = new Bindable<ImageFrame>();
 
         public IReadOnlyList<FaceData> Faces
         {
@@ -101,8 +96,9 @@ namespace Vignette.Game.Tracking
             timestampCounter++;
 
             using ImageFrame inputFrame = new ImageFrame(ImageFormat.Srgba, cFrame.Width, cFrame.Height, cFrame.WidthStep, cFrame.RawData);
-            using ImageFrame outputFrame = calculator.Send(inputFrame);
 
+            currentFrame.Value?.Dispose();
+            currentFrame.Value = calculator.Send(inputFrame);
         }
 
         protected override void Dispose(bool isDisposing)

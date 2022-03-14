@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq;
+using Mediapipe.Net.Framework.Format;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -108,10 +109,8 @@ namespace Vignette.Game.Settings.Sections
             private Sprite preview;
             private Texture texture;
 
-            private FrameConverter converter;
-
             [BackgroundDependencyLoader]
-            private void load(Bindable<Camera> camera)
+            private void load()
             {
                 Size = new Vector2(250, 140);
                 Masking = true;
@@ -132,37 +131,23 @@ namespace Vignette.Game.Settings.Sections
                     },
                 };
 
-                camera.BindValueChanged(handleCamera, true);
+                tracker.CurrentFrame.BindValueChanged(handleImageFrame, true);
             }
 
-            private void handleCamera(ValueChangedEvent<Camera> e)
+            private void handleImageFrame(ValueChangedEvent<ImageFrame> e)
             {
-                Schedule(() => preview.Hide());
-
-                texture?.Dispose();
-                texture = null;
-
-                if (e.OldValue != null)
-                    e.OldValue.OnFrame -= onFrameEventHandler;
-
-
-                if (e.NewValue != null)
-                    e.NewValue.OnFrame += onFrameEventHandler;
-            }
-
-            private void onFrameEventHandler(object sender, SeeShark.FrameEventArgs e)
-            {
-                if (e.Status != DecodeStatus.NewFrame)
+                ImageFrame image = e.NewValue;
+                if (image.IsDisposed)
                     return;
+                lock (image)
+                {
+                    byte[] pixelBytes = e.NewValue.CopyToByteBuffer(image.PixelDataSize);
+                    var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(pixelBytes, image.Width, image.Height);
 
-                Frame frame = e.Frame;
-                converter ??= new FrameConverter(frame, PixelFormat.Rgba);
-                Frame cFrame = converter.Convert(frame);
+                    texture ??= new Texture(image.Width, image.Height);
+                    texture.SetData(new TextureUpload(pixelData));
+                }
 
-                var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(cFrame.RawData, cFrame.Width, cFrame.Height);
-
-                texture ??= new Texture(cFrame.Width, cFrame.Height);
-                texture.SetData(new TextureUpload(pixelData));
 
                 preview.Texture = texture;
                 Schedule(() => preview.Show());
