@@ -108,6 +108,8 @@ namespace Vignette.Game.Settings.Sections
             private Sprite preview;
             private Texture texture;
 
+            private FrameConverter converter;
+
             [BackgroundDependencyLoader]
             private void load(Bindable<Camera> camera)
             {
@@ -154,9 +156,12 @@ namespace Vignette.Game.Settings.Sections
                     return;
 
                 Frame frame = e.Frame;
-                var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(frame.RawData, frame.Width, frame.Height);
+                converter ??= new FrameConverter(frame, PixelFormat.Rgba);
+                Frame cFrame = converter.Convert(frame);
 
-                texture ??= new Texture(frame.Width, frame.Height);
+                var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(cFrame.RawData, cFrame.Width, cFrame.Height);
+
+                texture ??= new Texture(cFrame.Width, cFrame.Height);
                 texture.SetData(new TextureUpload(pixelData));
 
                 preview.Texture = texture;

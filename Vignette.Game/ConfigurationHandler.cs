@@ -73,6 +73,7 @@ namespace Vignette.Game
 
             cameraIndex = gameConfig.GetBindable<int>(VignetteSetting.CameraIndex);
             camera.Value = cameraManager.GetDevice(cameraIndex.Value);
+            camera.Value.StartCapture();
         }
     }
 }

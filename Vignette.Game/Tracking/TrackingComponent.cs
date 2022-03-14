@@ -41,6 +41,7 @@ namespace Vignette.Game.Tracking
         private MediapipeGraphStore graphStore { get; set; }
 
         private readonly Bindable<Camera> camera = new Bindable<Camera>();
+        private FrameConverter converter;
         private readonly List<FaceData> faces = new List<FaceData>();
 
         private FaceMeshCpuCalculator calculator;
@@ -72,10 +73,16 @@ namespace Vignette.Game.Tracking
         private void handleCamera(ValueChangedEvent<Camera> e)
         {
             if (e.OldValue != null)
+            {
+                e.OldValue.StopCapture();
                 e.OldValue.OnFrame -= onFrameEventHandler;
+            }
 
             if (e.NewValue != null)
+            {
+                e.NewValue.StartCapture();
                 e.NewValue.OnFrame += onFrameEventHandler;
+            }
         }
 
         private void onFrameEventHandler(object sender, SeeShark.FrameEventArgs e)
@@ -87,9 +94,12 @@ namespace Vignette.Game.Tracking
             int width = frame.Width;
             int height = frame.Height;
 
+            converter ??= new FrameConverter(frame, PixelFormat.Rgba);
+            Frame cFrame = converter.Convert(frame);
+
             timestampCounter++;
 
-            using ImageFrame inputFrame = new ImageFrame(ImageFormat.Srgba, frame.Width, frame.Height, frame.WidthStep, frame.RawData);
+            using ImageFrame inputFrame = new ImageFrame(ImageFormat.Srgba, cFrame.Width, cFrame.Height, cFrame.WidthStep, cFrame.RawData);
             using ImageFrame outputFrame = calculator.Send(inputFrame);
 
         }
