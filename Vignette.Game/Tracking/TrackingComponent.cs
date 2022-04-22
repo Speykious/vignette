@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Mediapipe.Net.Calculators;
 using Mediapipe.Net.Framework.Protobuf;
 using osu.Framework.Allocation;
@@ -35,11 +36,11 @@ namespace Vignette.Game.Tracking
         [Resolved]
         private MediapipeGraphStore graphStore { get; set; }
 
-        private readonly Bindable<Camera> camera = new Bindable<Camera>();
+        public Bindable<Camera> Camera { get; set; } = new Bindable<Camera>();
         private FrameConverter converter;
         private readonly List<FaceData> faces = new List<FaceData>();
 
-        private FaceMeshGpuCalculator calculator;
+        private FaceMeshCpuCalculator calculator;
 
         private long timestampCounter = 0;
 
@@ -47,13 +48,13 @@ namespace Vignette.Game.Tracking
         private void load(Bindable<Camera> camera)
         {
 #pragma warning disable CA1416
-            calculator = new FaceMeshGpuCalculator();
+            calculator = new FaceMeshCpuCalculator();
             calculator.OnResult += handleLandmarks;
             calculator.Run();
 
 
-            this.camera.BindTo(camera);
-            this.camera.BindValueChanged(handleCamera, true);
+            this.Camera.BindTo(camera);
+            this.Camera.BindValueChanged(handleCamera, true);
         }
 
         private void handleLandmarks(object sender, List<NormalizedLandmarkList> landmarks)
@@ -87,8 +88,6 @@ namespace Vignette.Game.Tracking
                 return;
 
             Frame frame = e.Frame;
-            int width = frame.Width;
-            int height = frame.Height;
 
             converter ??= new FrameConverter(frame, PixelFormat.Rgba);
             Frame cFrame = converter.Convert(frame);
@@ -105,8 +104,8 @@ namespace Vignette.Game.Tracking
         {
             base.Dispose(isDisposing);
 
-            if (camera.Value != null)
-                camera.Value.OnFrame -= onFrameEventHandler;
+            if (Camera.Value != null)
+                Camera.Value.OnFrame -= onFrameEventHandler;
         }
     }
 }
