@@ -29,10 +29,15 @@ namespace Vignette.Game
         private readonly BindableDouble muteAdjustment = new BindableDouble();
 
         private Bindable<int> cameraIndex;
+        private Bindable<Camera> camera;
+        private CameraManager cameraManager;
 
         [BackgroundDependencyLoader]
         private void load(VignetteConfigManager gameConfig, FrameworkConfigManager frameworkConfig, AudioManager audio, CameraManager cameraManager, Bindable<Camera> camera, GameHost host)
         {
+            this.camera = camera;
+            this.cameraManager = cameraManager;
+
             // We cannot disable the bindable obtained from framework config as it is internally modified.
             windowSize = frameworkConfig.GetBindable<Size>(FrameworkSetting.WindowedSize);
             windowMode = frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode);
@@ -73,20 +78,28 @@ namespace Vignette.Game
             }, true);
 
             cameraIndex = gameConfig.GetBindable<int>(VignetteSetting.CameraIndex);
+            cameraIndex.BindValueChanged(onCameraIndexChanged);
+            cameraIndex.Value = 0;
+        }
+
+        private void onCameraIndexChanged(ValueChangedEvent<int> e)
+        {
             try
             {
-                camera.Value = cameraManager.GetDevice("/dev/video1", new SeeShark.VideoInputOptions
+                Console.WriteLine($"Getting camera {e.NewValue}");
+                camera.Value = cameraManager.GetDevice(e.NewValue, new SeeShark.VideoInputOptions
                 {
                     InputFormat = "mjpeg",
                     VideoSize = (640, 480),
                 });
                 camera.Value.StartCapture();
+                Console.WriteLine($"Got camera {camera.Value}");
             }
             catch (System.Exception ex)
             {
                 camera.Value?.StopCapture();
                 // camera.Value = null;
-                Console.Error.WriteLine($"Error: couldn't open camera at index {1}\n{ex}");
+                Console.Error.WriteLine($"Error: couldn't open camera at index {e.NewValue}\n{ex}");
             }
         }
     }

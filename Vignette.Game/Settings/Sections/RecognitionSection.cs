@@ -14,8 +14,6 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Localisation;
 using osuTK;
-using SeeShark;
-using SeeShark.Decode;
 using SeeShark.Device;
 using SixLabors.ImageSharp.PixelFormats;
 using Vignette.Game.Configuration;
@@ -37,12 +35,18 @@ namespace Vignette.Game.Settings.Sections
 
         private readonly BindableList<string> devices = new BindableList<string>();
         private Bindable<string> currentDevice;
+        private Bindable<int> cameraIndex;
+
+        [Resolved(canBeNull: true)]
+        private TrackingComponent tracker { get; set; }
 
         [BackgroundDependencyLoader]
         private void load(VignetteConfigManager config, CameraManager cameraManager)
         {
             devices.AddRange(cameraManager.Devices.ToArray().Select((info) => info.ToString()));
-            currentDevice = new Bindable<string>(devices[config.GetBindable<int>(VignetteSetting.CameraIndex).Value]);
+            cameraIndex = config.GetBindable<int>(VignetteSetting.CameraIndex);
+            currentDevice = new Bindable<string>(devices[cameraIndex.Value]);
+            currentDevice.ValueChanged += onNewCameraSelected;
             cameraManager.OnNewDevice += onNewCameraDevice;
             cameraManager.OnLostDevice += onLostCameraDevice;
 
@@ -87,6 +91,11 @@ namespace Vignette.Game.Settings.Sections
                     },
                 },
             };
+        }
+
+        private void onNewCameraSelected(ValueChangedEvent<string> e)
+        {
+            cameraIndex.Value = devices.IndexOf(e.NewValue);
         }
 
         private void onNewCameraDevice(CameraInfo info)
@@ -137,8 +146,9 @@ namespace Vignette.Game.Settings.Sections
             private void handleImageFrame(ValueChangedEvent<ImageFrame> e)
             {
                 ImageFrame image = e.NewValue;
-                if (image.IsDisposed)
+                if (image == null || image.IsDisposed)
                     return;
+
                 lock (image)
                 {
                     byte[] pixelBytes = e.NewValue.CopyToByteBuffer(image.PixelDataSize);
@@ -147,7 +157,6 @@ namespace Vignette.Game.Settings.Sections
                     texture ??= new Texture(image.Width, image.Height);
                     texture.SetData(new TextureUpload(pixelData));
                 }
-
 
                 preview.Texture = texture;
                 Schedule(() => preview.Show());
