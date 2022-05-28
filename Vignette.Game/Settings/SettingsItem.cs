@@ -84,9 +84,9 @@ namespace Vignette.Game.Settings
             set => this.FadeTo(value ? 1 : 0, 200, Easing.OutQuint);
         }
 
-        public IEnumerable<string> Keywords { get; set; }
+        public IEnumerable<LocalisableString> Keywords { get; set; }
 
-        public virtual IEnumerable<string> FilterTerms => Keywords == null ? new[] { Label.ToString() } : new List<string>(Keywords) { Label.ToString() }.Where(s => !string.IsNullOrEmpty(s));
+        IEnumerable<LocalisableString> IHasFilterTerms.FilterTerms => Keywords == null ? new[] { Label } : new List<LocalisableString>(Keywords) { Label }.Where(s => !string.IsNullOrEmpty(s.ToString()));
 
         private readonly FillFlowContainer labelFlow;
 

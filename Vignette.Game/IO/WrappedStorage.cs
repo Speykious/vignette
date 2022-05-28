@@ -96,10 +96,13 @@ namespace Vignette.Game.IO
             return new WrappedStorage(this, path);
         }
 
-        public override void OpenFileExternally(string filename)
+        public override bool OpenFileExternally(string filename)
             => UnderlyingStorage.OpenFileExternally(filename);
 
-        public override void PresentFileExternally(string filename)
+        public override bool PresentFileExternally(string filename)
             => UnderlyingStorage.PresentFileExternally(filename);
+
+        public override void Move(string from, string to)
+            => UnderlyingStorage.Move(from, to);
     }
 }
