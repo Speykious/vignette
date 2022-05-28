@@ -15,6 +15,7 @@
 syntax = "proto2";
 
 package mediapipe;
+option csharp_namespace = "Mediapipe.Net.Framework.Protobuf";
 
 option java_package = "com.google.mediapipe.graphs.instantmotiontracking";
 option java_outer_classname = "StickerBufferProto";

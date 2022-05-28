@@ -15,6 +15,7 @@
 syntax = "proto2";
 
 package mediapipe;
+option csharp_namespace = "Mediapipe.Net.Framework.Protobuf";
 
 message TimedModelMatrixProto {
   // 4x4 model matrix stored in ROW major order.
