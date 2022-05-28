@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using osu.Framework.Extensions.ImageExtensions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -17,15 +18,12 @@ namespace Vignette.Game.Graphics
         {
             Image<TPixelIn> start = Image.LoadPixelData<TPixelIn>(data, width, height);
 
-            Span<TPixelIn> pixels;
-            if (!start.TryGetSinglePixelSpan(out pixels))
-            {
-                throw new InvalidOperationException("Image is too big");
-            }
+            ReadOnlyPixelSpan<TPixelIn> pixelSpan = start.CreateReadOnlyPixelSpan();
+            ReadOnlySpan<TPixelIn> pixels = pixelSpan.Span;
 
             TPixelOut[] dest = new TPixelOut[pixels.Length];
             Span<TPixelOut> destination = new Span<TPixelOut>(dest);
-            PixelOperations<TPixelIn>.Instance.To<TPixelOut>(new SixLabors.ImageSharp.Configuration(), pixels, destination);
+            PixelOperations<TPixelIn>.Instance.To(new SixLabors.ImageSharp.Configuration(), pixels, destination);
             start.Dispose();
             return MemoryMarshal.AsBytes(destination).ToArray();
         }

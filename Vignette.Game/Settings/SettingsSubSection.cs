@@ -47,7 +47,7 @@ namespace Vignette.Game.Settings
 
         public bool FilteringActive { get; set; }
 
-        public IEnumerable<string> FilterTerms => new[] { Label.ToString() };
+        IEnumerable<LocalisableString> IHasFilterTerms.FilterTerms => new[] { Label };
 
         private readonly FillFlowContainer flow;
         private ThemableSpriteText label;
