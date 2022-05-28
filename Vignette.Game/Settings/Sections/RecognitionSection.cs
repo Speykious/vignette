@@ -45,7 +45,17 @@ namespace Vignette.Game.Settings.Sections
         {
             devices.AddRange(cameraManager.Devices.ToArray().Select((info) => info.ToString()));
             cameraIndex = config.GetBindable<int>(VignetteSetting.CameraIndex);
-            currentDevice = new Bindable<string>(devices[cameraIndex.Value]);
+
+            try
+            {
+                currentDevice = new Bindable<string>(devices[cameraIndex.Value]);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Console.Error.WriteLine("Warning: No cameras? \\:v");
+                currentDevice = new Bindable<string>("No Camera :(");
+            }
+
             currentDevice.ValueChanged += onNewCameraSelected;
             cameraManager.OnNewDevice += onNewCameraDevice;
             cameraManager.OnLostDevice += onLostCameraDevice;
