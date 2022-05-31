@@ -82,20 +82,22 @@ namespace Vignette.Game
             cameraIndex.Value = 0;
         }
 
+        private static readonly SeeShark.VideoInputOptions ultraSpecificSpeykiousOptionsOfDoom = new SeeShark.VideoInputOptions
+        {
+            InputFormat = "mjpeg",
+            VideoSize = (640, 480),
+        };
+
         private void onCameraIndexChanged(ValueChangedEvent<int> e)
         {
             try
             {
                 Console.WriteLine($"Getting camera {e.NewValue}");
-                camera.Value = cameraManager.GetDevice(e.NewValue, new SeeShark.VideoInputOptions
-                {
-                    InputFormat = "mjpeg",
-                    VideoSize = (640, 480),
-                });
+                camera.Value = cameraManager.GetDevice(e.NewValue, e.NewValue == 1 ? ultraSpecificSpeykiousOptionsOfDoom : null);
                 camera.Value.StartCapture();
                 Console.WriteLine($"Got camera {camera.Value}");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 camera.Value?.StopCapture();
                 // camera.Value = null;
