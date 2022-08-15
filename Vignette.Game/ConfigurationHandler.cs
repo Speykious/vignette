@@ -78,8 +78,7 @@ namespace Vignette.Game
             }, true);
 
             cameraIndex = gameConfig.GetBindable<int>(VignetteSetting.CameraIndex);
-            cameraIndex.BindValueChanged(onCameraIndexChanged);
-            cameraIndex.Value = 0;
+            cameraIndex.BindValueChanged(onCameraIndexChanged, true);
         }
 
         private static readonly SeeShark.VideoInputOptions ultraSpecificSpeykiousOptionsOfDoom = new SeeShark.VideoInputOptions
@@ -100,7 +99,6 @@ namespace Vignette.Game
             catch (Exception ex)
             {
                 camera.Value?.StopCapture();
-                // camera.Value = null;
                 Console.Error.WriteLine($"Error: couldn't open camera at index {e.NewValue}\n{ex}");
             }
         }
