@@ -10,6 +10,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
+using SeeShark;
 using SeeShark.Device;
 using Vignette.Game.Configuration;
 
@@ -29,6 +30,7 @@ namespace Vignette.Game
         private readonly BindableDouble muteAdjustment = new BindableDouble();
 
         private Bindable<int> cameraIndex;
+        private Bindable<string> cameraInputFormat;
         private Bindable<Camera> camera;
         private CameraManager cameraManager;
 
@@ -79,20 +81,26 @@ namespace Vignette.Game
 
             cameraIndex = gameConfig.GetBindable<int>(VignetteSetting.CameraIndex);
             cameraIndex.BindValueChanged(onCameraIndexChanged, true);
+            cameraInputFormat = gameConfig.GetBindable<string>(VignetteSetting.CameraInputFormat);
         }
-
-        private static readonly SeeShark.VideoInputOptions ultraSpecificSpeykiousOptionsOfDoom = new SeeShark.VideoInputOptions
-        {
-            InputFormat = "mjpeg",
-            VideoSize = (640, 480),
-        };
 
         private void onCameraIndexChanged(ValueChangedEvent<int> e)
         {
             try
             {
                 Console.WriteLine($"Getting camera {e.NewValue}");
-                camera.Value = cameraManager.GetDevice(e.NewValue, e.NewValue == 1 ? ultraSpecificSpeykiousOptionsOfDoom : null);
+
+                VideoInputOptions options = null;
+                if (cameraInputFormat.Value != null)
+                {
+                    Console.WriteLine($"Input format specified: {cameraInputFormat.Value}");
+                    options = new VideoInputOptions
+                    {
+                        InputFormat = cameraInputFormat.Value,
+                    };
+                }
+
+                camera.Value = cameraManager.GetDevice(e.NewValue, options);
                 camera.Value.StartCapture();
                 Console.WriteLine($"Got camera {camera.Value}");
             }
