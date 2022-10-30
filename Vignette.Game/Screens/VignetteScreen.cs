@@ -21,7 +21,7 @@ namespace Vignette.Game.Screens
         [Resolved]
         private SettingsOverlay settings { get; set; }
 
-        public override void OnEntering(IScreen last)
+        public override void OnEntering(ScreenTransitionEvent last)
         {
             if (settings.State.Value == Visibility.Visible && !AllowToggleSettings)
                 settings.Hide();

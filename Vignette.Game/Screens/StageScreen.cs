@@ -110,10 +110,10 @@ namespace Vignette.Game.Screens
             }
         }
 
-        public override void OnEntering(IScreen last)
+        public override void OnEntering(ScreenTransitionEvent last)
         {
-            base.OnEntering(last);
             this.FadeOut().Delay(500).FadeInFromZero(500, Easing.OutQuint);
+            base.OnEntering(last);
         }
 
         public MenuItem[] ContextMenuItems => new MenuItem[]

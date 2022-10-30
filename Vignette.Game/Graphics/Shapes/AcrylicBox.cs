@@ -92,13 +92,13 @@ namespace Vignette.Game.Graphics.Shapes
                     Name = "Luminance",
                     RelativeSizeAxes = Axes.Both,
                 },
-                new SpriteNoise
-                {
-                    Name = "Noise",
-                    RelativeSizeAxes = Axes.Both,
-                    Resolution = new Vector2(30),
-                    Alpha = 0.02f,
-                },
+                // new SpriteNoise
+                // {
+                //     Name = "Noise",
+                //     RelativeSizeAxes = Axes.Both,
+                //     Resolution = new Vector2(30),
+                //     Alpha = 0.02f,
+                // },
             };
         }
     }

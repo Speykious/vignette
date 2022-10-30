@@ -9,11 +9,13 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Localisation;
 using osuTK;
+using SeeShark;
 using SeeShark.Device;
 using SixLabors.ImageSharp.PixelFormats;
 using Vignette.Game.Configuration;
@@ -153,18 +155,23 @@ namespace Vignette.Game.Settings.Sections
                 tracker.CurrentFrame.BindValueChanged(handleImageFrame, true);
             }
 
-            private void handleImageFrame(ValueChangedEvent<ImageFrame> e)
+            private void handleImageFrame(ValueChangedEvent<Frame> e)
             {
-                ImageFrame image = e.NewValue;
+                Frame image = e.NewValue;
                 if (image == null || image.IsDisposed)
                     return;
 
                 lock (image)
                 {
-                    byte[] pixelBytes = e.NewValue.CopyToByteBuffer(image.PixelDataSize);
+                    byte[] pixelBytes = new byte[e.NewValue.RawData.Length];
+                    e.NewValue.RawData.CopyTo(pixelBytes.AsSpan());
                     var pixelData = SixLabors.ImageSharp.Image.LoadPixelData<Rgba32>(pixelBytes, image.Width, image.Height);
 
-                    texture ??= new Texture(image.Width, image.Height);
+                    texture ??= new Texture(null)
+                    {
+                        Width = image.Width,
+                        Height = image.Height,
+                    };
                     texture.SetData(new TextureUpload(pixelData));
                 }
 

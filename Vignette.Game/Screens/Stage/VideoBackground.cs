@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.IO;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Video;
 
 namespace Vignette.Game.Screens.Stage
@@ -13,7 +14,7 @@ namespace Vignette.Game.Screens.Stage
     {
         public override IEnumerable<string> Extensions => new[] { ".mp4" };
 
-        protected override Drawable CreateBackground(Stream stream) => new Video(stream)
+        protected override Drawable CreateBackground(IRenderer renderer, Stream stream) => new Video(stream)
         {
             Loop = true,
             FillMode = FillMode.Fit,

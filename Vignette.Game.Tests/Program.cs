@@ -10,11 +10,10 @@ namespace Vignette.Game.Tests
     public static class Program
     {
         [STAThread]
-        [Obsolete]
-        public static void Main(string[] args)
+        public static void Main()
         {
-            using (var host = Host.GetSuitableHost("vignette"))
-                host.Run(new VisualTestGame());
+            using var host = Host.GetSuitableDesktopHost("vignette");
+            host.Run(new VisualTestGame());
         }
     }
 }

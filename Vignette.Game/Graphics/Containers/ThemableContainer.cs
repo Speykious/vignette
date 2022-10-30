@@ -113,7 +113,7 @@ namespace Vignette.Game.Graphics.Containers
 
         public void Clear() => Target.Clear();
 
-        public bool Remove(T drawable) => Target.Remove(drawable);
+        public bool Remove(T drawable) => Target.Remove(drawable, false);
 
         protected override Container<T> CreateDrawable() => new Container<T>
         {

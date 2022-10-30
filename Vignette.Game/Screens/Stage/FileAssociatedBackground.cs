@@ -9,6 +9,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Rendering;
 using Vignette.Game.Configuration;
 using Vignette.Game.IO;
 
@@ -25,23 +26,23 @@ namespace Vignette.Game.Screens.Stage
         private VignetteGameBase game { get; set; }
 
         [BackgroundDependencyLoader]
-        private void load(VignetteConfigManager config)
+        private void load(VignetteConfigManager config, IRenderer renderer)
         {
             path = config.GetBindable<string>(VignetteSetting.BackgroundPath);
-            path.BindValueChanged(e => handlePathChange(), true);
+            path.BindValueChanged(e => handlePathChange(renderer), true);
             game.RegisterFileHandler(this);
         }
 
-        protected abstract Drawable CreateBackground(Stream stream);
+        protected abstract Drawable CreateBackground(IRenderer renderer, Stream stream);
 
-        private void handlePathChange()
+        private void handlePathChange(IRenderer renderer)
         {
             performCleanup();
 
             if (Extensions.Contains(Path.GetExtension(path.Value)) && File.Exists(path.Value))
             {
                 stream = File.OpenRead(path.Value);
-                InternalChild = CreateBackground(stream);
+                InternalChild = CreateBackground(renderer, stream);
             }
         }
 

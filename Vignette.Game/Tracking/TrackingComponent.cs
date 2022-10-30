@@ -4,9 +4,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Mediapipe.Net.Calculators;
 using Mediapipe.Net.Framework.Protobuf;
+using Mediapipe.Net.Solutions;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -21,8 +20,8 @@ namespace Vignette.Game.Tracking
 {
     public class TrackingComponent : Component
     {
-        public IBindable<ImageFrame> CurrentFrame => currentFrame;
-        private Bindable<ImageFrame> currentFrame = new Bindable<ImageFrame>();
+        public IBindable<Frame> CurrentFrame => currentFrame;
+        private Bindable<Frame> currentFrame = new Bindable<Frame>();
 
         public IReadOnlyList<FaceData> Faces
         {
@@ -40,24 +39,19 @@ namespace Vignette.Game.Tracking
         private FrameConverter converter;
         private readonly List<FaceData> faces = new List<FaceData>();
 
-        private FaceMeshCpuCalculator calculator;
-
-        private long timestampCounter = 0;
+        private FaceMeshCpuSolution solution;
 
         [BackgroundDependencyLoader]
         private void load(Bindable<Camera> camera)
         {
 #pragma warning disable CA1416
-            calculator = new FaceMeshCpuCalculator();
-            calculator.OnResult += handleLandmarks;
-            calculator.Run();
+            solution = new FaceMeshCpuSolution();
 
-
-            this.Camera.BindTo(camera);
-            this.Camera.BindValueChanged(handleCamera, true);
+            Camera.BindTo(camera);
+            Camera.BindValueChanged(handleCamera, true);
         }
 
-        private void handleLandmarks(object sender, List<NormalizedLandmarkList> landmarks)
+        private void handleLandmarks(object _, List<NormalizedLandmarkList> landmarks)
         {
             lock (faces)
             {
@@ -82,7 +76,7 @@ namespace Vignette.Game.Tracking
             }
         }
 
-        private void onFrameEventHandler(object sender, SeeShark.FrameEventArgs e)
+        private void onFrameEventHandler(object sender, FrameEventArgs e)
         {
             if (e.Status != DecodeStatus.NewFrame)
                 return;
@@ -92,12 +86,10 @@ namespace Vignette.Game.Tracking
             converter ??= new FrameConverter(frame, PixelFormat.Rgba);
             Frame cFrame = converter.Convert(frame);
 
-            timestampCounter++;
-
             using ImageFrame inputFrame = new ImageFrame(ImageFormat.Srgba, cFrame.Width, cFrame.Height, cFrame.WidthStep, cFrame.RawData);
-
-            currentFrame.Value?.Dispose();
-            currentFrame.Value = calculator.Send(inputFrame);
+            List<NormalizedLandmarkList> landmarks = solution.Compute(inputFrame);
+            handleLandmarks(this, landmarks);
+            currentFrame.Value = cFrame;
         }
 
         protected override void Dispose(bool isDisposing)

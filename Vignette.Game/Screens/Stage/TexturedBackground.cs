@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.IO;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 
@@ -14,7 +15,7 @@ namespace Vignette.Game.Screens.Stage
     {
         public override IEnumerable<string> Extensions => new[] { ".png", ".jpg", ".jpeg" };
 
-        protected override Drawable CreateBackground(Stream stream)
+        protected override Drawable CreateBackground(IRenderer renderer, Stream stream)
         {
             try
             {
@@ -22,7 +23,7 @@ namespace Vignette.Game.Screens.Stage
                 {
                     RelativeSizeAxes = Axes.Both,
                     FillMode = FillMode.Fill,
-                    Texture = Texture.FromStream(stream),
+                    Texture = Texture.FromStream(renderer, stream),
                 };
             }
             catch (TextureTooLargeForGLException)

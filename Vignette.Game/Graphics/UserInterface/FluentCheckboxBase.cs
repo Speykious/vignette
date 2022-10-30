@@ -29,7 +29,7 @@ namespace Vignette.Game.Graphics.UserInterface
             {
                 if (text == null)
                 {
-                    Remove(checkbox);
+                    Remove(checkbox, false);
 
                     Add(new FillFlowContainer
                     {

@@ -8,10 +8,9 @@ namespace Vignette.Desktop
 {
     public static class Program
     {
-        [System.Obsolete]
-        public static void Main(string[] args)
+        public static void Main()
         {
-            using var host = Host.GetSuitableHost("vignette");
+            using var host = Host.GetSuitableDesktopHost("vignette");
             host.Run(new VignetteGameDesktop());
         }
     }
